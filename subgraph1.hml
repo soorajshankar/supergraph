@@ -1,0 +1,307 @@
+---
+kind: HasuraHubDataConnector
+version: v1
+definition:
+  name: db1
+  connectorId: hasura/postgres
+  connectorConfiguration:
+    - region: gcp-us-east4
+      mode: ReadWrite
+      configuration:
+        version: 1
+        connectionUri:
+          uri:
+            value: postgres://sooraj:QzRf81GtnPZH@ep-billowing-term-75880352.ap-southeast-1.aws.neon.tech/neondb
+        metadata:
+          tables:
+            article:
+              schemaName: public
+              tableName: article
+              columns:
+                author_id:
+                  name: author_id
+                  type: int4
+                  nullable: nullable
+                  description: null
+                id:
+                  name: id
+                  type: int4
+                  nullable: nonNullable
+                  description: null
+                title:
+                  name: title
+                  type: text
+                  nullable: nullable
+                  description: null
+              uniquenessConstraints:
+                article_pkey:
+                  - id
+              foreignRelations:
+                FK_article_author_id:
+                  foreignTable: author
+                  columnMapping:
+                    author_id: id
+              description: null
+            author:
+              schemaName: public
+              tableName: author
+              columns:
+                first_name:
+                  name: first_name
+                  type: text
+                  nullable: nullable
+                  description: null
+                id:
+                  name: id
+                  type: int4
+                  nullable: nonNullable
+                  description: null
+                last_name:
+                  name: last_name
+                  type: text
+                  nullable: nullable
+                  description: null
+              uniquenessConstraints:
+                author_pkey:
+                  - id
+              foreignRelations: {}
+              description: null
+          nativeQueries: {}
+          aggregateFunctions:
+            int4:
+              bit_and:
+                returnType: int4
+              bit_or:
+                returnType: int4
+              bit_xor:
+                returnType: int4
+              max:
+                returnType: int4
+              min:
+                returnType: int4
+            text:
+              max:
+                returnType: text
+              min:
+                returnType: text
+          comparisonOperators:
+            int4:
+              _eq:
+                operatorName: =
+                argumentType: int4
+              _gt:
+                operatorName: ">"
+                argumentType: int4
+              _gte:
+                operatorName: ">="
+                argumentType: int4
+              _lt:
+                operatorName: <
+                argumentType: int4
+              _lte:
+                operatorName: <=
+                argumentType: int4
+              _neq:
+                operatorName: <>
+                argumentType: int4
+            text:
+              _eq:
+                operatorName: =
+                argumentType: text
+              _gt:
+                operatorName: ">"
+                argumentType: text
+              _gte:
+                operatorName: ">="
+                argumentType: text
+              _ilike:
+                operatorName: ~~*
+                argumentType: text
+              _iregex:
+                operatorName: ~*
+                argumentType: text
+              _like:
+                operatorName: ~~
+                argumentType: text
+              _lt:
+                operatorName: <
+                argumentType: text
+              _lte:
+                operatorName: <=
+                argumentType: text
+              _neq:
+                operatorName: <>
+                argumentType: text
+              _nilike:
+                operatorName: "!~~*"
+                argumentType: text
+              _niregex:
+                operatorName: "!~*"
+                argumentType: text
+              _nlike:
+                operatorName: "!~~"
+                argumentType: text
+              _nregex:
+                operatorName: "!~"
+                argumentType: text
+              _regex:
+                operatorName: "~"
+                argumentType: text
+        configureOptions:
+          excludedSchemas:
+            - information_schema
+            - pg_catalog
+            - tiger
+            - crdb_internal
+            - columnar
+            - columnar_internal
+          unqualifiedSchemas:
+            - public
+          comparisonOperatorMapping:
+            - operatorName: =
+              exposedName: _eq
+            - operatorName: <=
+              exposedName: _lte
+            - operatorName: ">"
+              exposedName: _gt
+            - operatorName: ">="
+              exposedName: _gte
+            - operatorName: <
+              exposedName: _lt
+            - operatorName: "!="
+              exposedName: _neq
+            - operatorName: LIKE
+              exposedName: _like
+            - operatorName: NOT LIKE
+              exposedName: _nlike
+            - operatorName: ILIKE
+              exposedName: _ilike
+            - operatorName: NOT ILIKE
+              exposedName: _nilike
+            - operatorName: SIMILAR TO
+              exposedName: _similar
+            - operatorName: NOT SIMILAR TO
+              exposedName: _nsimilar
+            - operatorName: <>
+              exposedName: _neq
+            - operatorName: ~~
+              exposedName: _like
+            - operatorName: "!~~"
+              exposedName: _nlike
+            - operatorName: ~~*
+              exposedName: _ilike
+            - operatorName: "!~~*"
+              exposedName: _nilike
+            - operatorName: "~"
+              exposedName: _regex
+            - operatorName: "!~"
+              exposedName: _nregex
+            - operatorName: ~*
+              exposedName: _iregex
+            - operatorName: "!~*"
+              exposedName: _niregex
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: db1
+  dataConnectorScalarType: text
+  representation: String
+  graphql:
+    comparisonExpressionTypeName: subgraph1Db1TextComparisonExp
+
+---
+kind: ScalarType
+version: v1
+definition:
+  name: int4
+  graphql:
+    typeName: subgraph1Int4
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: db1
+  dataConnectorScalarType: int4
+  representation: int4
+  graphql:
+    comparisonExpressionTypeName: subgraph1Db1Int4ComparisonExp
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: author
+  fields:
+    - name: first_name
+      type: String
+    - name: id
+      type: int4
+    - name: last_name
+      type: String
+  graphql:
+    typeName: subgraph1Author
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: author
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - first_name
+          - id
+          - last_name
+
+---
+kind: Model
+version: v1
+definition:
+  name: author
+  objectType: author
+  filterableFields:
+    - fieldName: first_name
+      operators:
+        enableAll: true
+    - fieldName: id
+      operators:
+        enableAll: true
+    - fieldName: last_name
+      operators:
+        enableAll: true
+  orderableFields:
+    - fieldName: first_name
+      orderByDirections:
+        enableAll: true
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: last_name
+      orderByDirections:
+        enableAll: true
+  source:
+    dataConnectorName: db1
+    collection: author
+  graphql:
+    selectUniques:
+      - queryRootField: subgraph1AuthorById
+        uniqueIdentifier:
+          - id
+    selectMany:
+      queryRootField: subgraph1Author
+    filterExpressionType: subgraph1AuthorBoolExp
+    orderByExpressionType: subgraph1AuthorOrderBy
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: author
+  permissions:
+    - role: admin
+      select:
+        filter: null

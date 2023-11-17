@@ -1,0 +1,15 @@
+version: 1
+project: 91de4a2a-139b-4c07-b792-45e0c4f7422e
+
+# A build profile specifies your project's environment
+# and the association of namespaces to HML files
+# You can create different build profiles for different environments,
+# like production and staging, which may reference environment-specific auth configs.
+# We have created one for you to get you started
+buildProfiles:
+  - build-profile.yaml
+
+# This refers to the default build profile
+# that is used when you create a build and
+# don't specify which build profile to use.
+defaultBuildProfile: build-profile.yaml
